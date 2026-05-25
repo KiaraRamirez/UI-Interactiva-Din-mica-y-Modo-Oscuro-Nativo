@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ML Vision — Clasificador en Tiempo Real</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.10.0/dist/tf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8.5/dist/teachablemachine-image.min.js"></script>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+  <!-- TOP BAR -->
+  <header class="topbar">
+    <div class="logo">
+      <span class="logo-icon">◈</span>
+      <span class="logo-text">ML<strong>Vision</strong></span>
+    </div>
+    <div class="topbar-actions">
+      <div class="status-dot" id="statusDot"></div>
+      <span class="status-label" id="statusLabel">Listo</span>
+      <button class="toggle-btn" id="darkToggle" aria-label="Toggle dark mode">
+        <span class="toggle-track">
+          <span class="toggle-thumb"></span>
+        </span>
+        <span class="toggle-icon sun">☀</span>
+        <span class="toggle-icon moon">◑</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="layout">
+
+    <!-- LEFT PANEL: Model config + webcam -->
+    <section class="panel panel-left">
+      <div class="panel-header">
+        <h2>Configuración del Modelo</h2>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">URL del Modelo (Teachable Machine)</label>
+        <div class="input-row">
+          <input type="text" id="modelURL" class="field-input"
+            placeholder="https://teachablemachine.withgoogle.com/models/XXXX/"/>
+          <button class="btn btn-primary" id="loadBtn">Cargar</button>
+        </div>
+        <p class="field-hint">Pega la URL de exportación de tu modelo de Teachable Machine</p>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Webcam -->
+      <div class="webcam-section">
+        <div class="webcam-frame" id="webcamFrame">
+          <div class="webcam-placeholder" id="webcamPlaceholder">
+            <div class="placeholder-icon">◉</div>
+            <p>Cámara inactiva</p>
+            <p class="placeholder-sub">Carga un modelo para activar</p>
+          </div>
+          <div id="webcamContainer"></div>
+          <div class="scan-line" id="scanLine"></div>
+          <div class="corner tl"></div>
+          <div class="corner tr"></div>
+          <div class="corner bl"></div>
+          <div class="corner br"></div>
+        </div>
+
+        <div class="cam-controls">
+          <button class="btn btn-secondary" id="startBtn" disabled>
+            <span class="btn-icon">▶</span> Iniciar cámara
+          </button>
+          <button class="btn btn-ghost" id="stopBtn" disabled>
+            <span class="btn-icon">■</span> Detener
+          </button>
+        </div>
+      </div>
+
+      <!-- Confidence Semaphore Legend -->
+      <div class="legend">
+        <p class="legend-title">Semáforo de Confianza</p>
+        <div class="legend-items">
+          <span class="legend-dot high"></span><span>&gt; 90% Alta</span>
+          <span class="legend-dot mid"></span><span>50–89% Media</span>
+          <span class="legend-dot low"></span><span>&lt; 50% Baja</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- RIGHT PANEL: Results -->
+    <section class="panel panel-right">
+      <div class="panel-header">
+        <h2>Resultados en Tiempo Real</h2>
+        <div class="fps-badge" id="fpsBadge">— fps</div>
+      </div>
+
+      <!-- Top prediction hero -->
+      <div class="hero-prediction" id="heroPrediction">
+        <div class="hero-label" id="heroLabel">—</div>
+        <div class="hero-confidence" id="heroConfidence">Esperando modelo...</div>
+        <div class="hero-bar-wrap">
+          <div class="hero-bar" id="heroBar"></div>
+        </div>
+        <div class="semaphore-ring" id="semaphoreRing"></div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- All classes -->
+      <div class="results-list" id="resultsList">
+        <div class="empty-state">
+          <p>Las predicciones aparecerán aquí</p>
+          <p class="empty-sub">una vez que el modelo esté activo</p>
+        </div>
+      </div>
+
+      <!-- Log -->
+      <div class="log-section">
+        <div class="log-header">
+          <span class="log-title">Registro de actividad</span>
+          <button class="btn-clear" id="clearLog">limpiar</button>
+        </div>
+        <div class="log-body" id="logBody">
+          <div class="log-entry info">Sistema inicializado. Esperando modelo.</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
