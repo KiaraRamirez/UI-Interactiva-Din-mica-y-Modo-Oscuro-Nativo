@@ -1,6 +1,4 @@
-/* =========================================
-   CYBERPUNK DARK THEME — ML Vision
-   ========================================= */
+
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600&display=swap');
 
 :root {
@@ -38,9 +36,7 @@
   --transition: .2s ease;
 }
 
-/* =========================================
-   BASE
-   ========================================= */
+
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
@@ -51,7 +47,6 @@ body {
   overflow-x: hidden;
 }
 
-/* grid background */
 body::before {
   content: '';
   position: fixed;
@@ -66,16 +61,12 @@ body::before {
 
 main, header { position: relative; z-index: 1; }
 
-/* =========================================
-   SCROLLBAR
-   ========================================= */
+
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: var(--bg-void); }
 ::-webkit-scrollbar-thumb { background: var(--neon-cyan); opacity: .3; border-radius: 2px; }
 
-/* =========================================
-   TOP BAR
-   ========================================= */
+
 .topbar {
   display: flex;
   align-items: center;
@@ -142,7 +133,6 @@ main, header { position: relative; z-index: 1; }
   min-width: 80px;
 }
 
-/* toggle dark mode btn */
 .toggle-btn {
   display: flex;
   align-items: center;
@@ -185,9 +175,7 @@ body.dark .toggle-thumb {
 body.dark .sun { display: none; }
 body.dark .moon { display: block; color: var(--neon-cyan); }
 
-/* =========================================
-   LAYOUT
-   ========================================= */
+
 .layout {
   display: grid;
   grid-template-columns: 360px 1fr;
@@ -195,9 +183,6 @@ body.dark .moon { display: block; color: var(--neon-cyan); }
   overflow: hidden;
 }
 
-/* =========================================
-   PANELS
-   ========================================= */
 .panel {
   padding: 24px;
   overflow-y: auto;
@@ -237,9 +222,7 @@ body.dark .moon { display: block; color: var(--neon-cyan); }
   letter-spacing: 1px;
 }
 
-/* =========================================
-   FORM
-   ========================================= */
+
 .field-group { margin-bottom: 20px; }
 .field-label {
   display: block;
@@ -290,10 +273,7 @@ body.dark .moon { display: block; color: var(--neon-cyan); }
   opacity: .5;
 }
 
-/* =========================================
-   BUTTONS
-   ========================================= */
-.btn {
+
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -344,9 +324,7 @@ body.dark .moon { display: block; color: var(--neon-cyan); }
   box-shadow: 0 0 10px rgba(255,45,85,0.2);
 }
 
-/* =========================================
-   WEBCAM
-   ========================================= */
+
 .webcam-section { margin-bottom: 20px; }
 
 .webcam-frame {
@@ -415,9 +393,7 @@ body.dark .moon { display: block; color: var(--neon-cyan); }
 
 .cam-controls { display: flex; gap: 8px; }
 
-/* =========================================
-   LEGEND
-   ========================================= */
+
 .legend {
   background: var(--bg-card);
   border: 1px solid var(--border-dim);
@@ -451,9 +427,7 @@ body.dark .moon { display: block; color: var(--neon-cyan); }
 .legend-dot.mid  { background: var(--neon-yellow); box-shadow: 0 0 6px var(--neon-yellow); }
 .legend-dot.low  { background: var(--neon-red);    box-shadow: 0 0 6px var(--neon-red); }
 
-/* =========================================
-   HERO PREDICTION
-   ========================================= */
+
 .hero-prediction {
   background: var(--bg-card);
   border: 1px solid var(--border-glow);
@@ -522,9 +496,6 @@ body.dark .moon { display: block; color: var(--neon-cyan); }
   transition: width .3s ease, background .3s;
 }
 
-/* =========================================
-   RESULTS LIST
-   ========================================= */
 .results-list { margin-bottom: 20px; }
 
 .empty-state {
@@ -577,7 +548,6 @@ body.dark .moon { display: block; color: var(--neon-cyan); }
   letter-spacing: 1px;
 }
 
-/* Semaphore colors */
 .confidence-high .result-bar { background: var(--neon-green); box-shadow: 0 0 8px rgba(0,255,136,0.5); }
 .confidence-high .result-pct { color: var(--neon-green); text-shadow: 0 0 8px rgba(0,255,136,0.5); }
 .confidence-mid  .result-bar { background: var(--neon-yellow); box-shadow: 0 0 8px rgba(255,230,0,0.5); }
@@ -585,9 +555,7 @@ body.dark .moon { display: block; color: var(--neon-cyan); }
 .confidence-low  .result-bar { background: var(--neon-red); box-shadow: 0 0 8px rgba(255,45,85,0.5); }
 .confidence-low  .result-pct { color: var(--neon-red); text-shadow: 0 0 8px rgba(255,45,85,0.5); }
 
-/* =========================================
-   LOG
-   ========================================= */
+
 .log-section {
   border: 1px solid var(--border-dim);
   border-radius: var(--radius);
@@ -640,9 +608,7 @@ body.dark .moon { display: block; color: var(--neon-cyan); }
 .log-entry.error   { color: var(--neon-red); }
 .log-entry.info    { color: var(--text-secondary); }
 
-/* =========================================
-   ANIMATIONS
-   ========================================= */
+
 @keyframes pulse    { 0%,100%{opacity:1;} 50%{opacity:.3;} }
 @keyframes blink    { 0%,100%{opacity:1;} 50%{opacity:.6;} }
 @keyframes scanMove { 0%{top:0%} 100%{top:100%} }
