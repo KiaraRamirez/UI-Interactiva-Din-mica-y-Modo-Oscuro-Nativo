@@ -1,9 +1,4 @@
-/* ============================================================
-   app.js — ML Vision | Clasificador Teachable Machine
-   Semáforo de Confianza + Modo Oscuro con CSS Variables
-   ============================================================ */
 
-// ─── Estado global ────────────────────────────────────────────
 let model = null;
 let webcam = null;
 let isRunning = false;
@@ -12,7 +7,6 @@ let lastFrameTime = performance.now();
 let frameCount = 0;
 let lastFpsUpdate = performance.now();
 
-// ─── Referencias DOM ──────────────────────────────────────────
 const modelURL   = document.getElementById('modelURL');
 const loadBtn    = document.getElementById('loadBtn');
 const startBtn   = document.getElementById('startBtn');
@@ -34,7 +28,6 @@ const fpsBadge   = document.getElementById('fpsBadge');
 const logBody    = document.getElementById('logBody');
 const clearLog   = document.getElementById('clearLog');
 
-// ─── Helpers ──────────────────────────────────────────────────
 function log(msg, type = 'info') {
   const ts = new Date().toLocaleTimeString('es', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
   const entry = document.createElement('div');
@@ -49,11 +42,7 @@ function setStatus(label, state = '') {
   statusDot.className = 'status-dot ' + state;
 }
 
-/**
- * SEMÁFORO DE CONFIANZA
- * Determina la clase CSS según el porcentaje de confianza
- * > 90% → high (verde)  50-89% → mid (amarillo)  <50% → low (rojo)
- */
+
 function getConfidenceClass(probability) {
   const pct = probability * 100;
   if (pct >= 90) return 'high';
@@ -61,19 +50,15 @@ function getConfidenceClass(probability) {
   return 'low';
 }
 
-// ─── DARK MODE TOGGLE ─────────────────────────────────────────
-// Aplica modo oscuro cambiando la clase del <body>
-// El CSS usa :root y body.dark para cambiar todas las CSS Variables
+
 
 darkToggle.addEventListener('click', () => {
   const isDark = document.body.classList.toggle('dark');
   log(isDark ? 'Modo oscuro activado' : 'Modo claro activado', 'info');
 
-  // Persistir preferencia en localStorage
   localStorage.setItem('theme', isDark ? 'dark' : 'light');
 });
 
-// Restaurar tema guardado
 (function initTheme() {
   const saved = localStorage.getItem('theme');
   const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -82,7 +67,6 @@ darkToggle.addEventListener('click', () => {
   }
 })();
 
-// ─── CARGAR MODELO ────────────────────────────────────────────
 loadBtn.addEventListener('click', async () => {
   const url = modelURL.value.trim();
   if (!url) {
@@ -118,7 +102,6 @@ loadBtn.addEventListener('click', async () => {
   }
 });
 
-// ─── CONSTRUIR FILAS DE RESULTADOS ────────────────────────────
 function buildResultRows(count) {
   resultsList.innerHTML = '';
   for (let i = 0; i < count; i++) {
@@ -136,7 +119,6 @@ function buildResultRows(count) {
   }
 }
 
-// ─── INICIAR CÁMARA ───────────────────────────────────────────
 startBtn.addEventListener('click', async () => {
   if (!model) return;
 
@@ -170,7 +152,6 @@ startBtn.addEventListener('click', async () => {
   }
 });
 
-// ─── DETENER CÁMARA ───────────────────────────────────────────
 stopBtn.addEventListener('click', () => {
   isRunning = false;
   cancelAnimationFrame(animationId);
@@ -190,7 +171,7 @@ stopBtn.addEventListener('click', () => {
   setStatus('Detenido', '');
   log('Clasificación detenida', 'warn');
 
-  // Resetear UI
+
   heroLabel.textContent = '—';
   heroConfidence.textContent = 'Cámara detenida';
   heroBar.style.width = '0%';
@@ -198,16 +179,13 @@ stopBtn.addEventListener('click', () => {
   semaphoreRing.className = 'semaphore-ring';
 });
 
-// ─── BUCLE PRINCIPAL DE INFERENCIA ───────────────────────────
 async function loop() {
   if (!isRunning) return;
 
-  webcam.update(); // Avanzar frame de la cámara
+  webcam.update(); 
 
-  // ── INFERENCIA ──
   const predictions = await model.predict(webcam.canvas);
 
-  // ── Actualizar FPS ──
   frameCount++;
   const now = performance.now();
   if (now - lastFpsUpdate >= 1000) {
@@ -216,23 +194,18 @@ async function loop() {
     lastFpsUpdate = now;
   }
 
-  // ── Ordenar predicciones por probabilidad ──
   const sorted = [...predictions].sort((a, b) => b.probability - a.probability);
   const top = sorted[0];
 
-  // ── ACTUALIZAR HERO (predicción principal) ──
   const topClass = getConfidenceClass(top.probability);
   heroLabel.textContent = top.className;
   heroConfidence.textContent = `Confianza: ${(top.probability * 100).toFixed(1)}%`;
 
-  // Barra del hero — color dinámico por semáforo
   heroBar.style.width = `${(top.probability * 100).toFixed(1)}%`;
   heroBar.style.background = getColorByClass(topClass);
 
-  // Anillo semáforo
   semaphoreRing.className = `semaphore-ring ${topClass}`;
 
-  // ── ACTUALIZAR TODAS LAS FILAS ──
   predictions.forEach((pred, i) => {
     const pct = (pred.probability * 100).toFixed(1);
     const level = getConfidenceClass(pred.probability);
@@ -243,15 +216,11 @@ async function loop() {
 
     if (!row) return;
 
-    // Actualizar nombre de clase
     nameEl.textContent = pred.className;
 
-    // Actualizar barra — CSS variable mediante clase en el row
-    // Remover clases previas y aplicar la del semáforo actual
     row.classList.remove('confidence-high', 'confidence-mid', 'confidence-low');
     row.classList.add(`confidence-${level}`);
 
-    // Ancho de la barra
     bar.style.width = `${pct}%`;
     pctEl.textContent = `${pct}%`;
   });
@@ -259,22 +228,18 @@ async function loop() {
   animationId = requestAnimationFrame(loop);
 }
 
-// ─── Utilidad: color hex según nivel ─────────────────────────
 function getColorByClass(level) {
-  // Lee las CSS variables del :root en tiempo de ejecución
   const style = getComputedStyle(document.documentElement);
   if (level === 'high') return style.getPropertyValue('--color-high').trim();
   if (level === 'mid')  return style.getPropertyValue('--color-mid').trim();
   return style.getPropertyValue('--color-low').trim();
 }
 
-// ─── Limpiar log ──────────────────────────────────────────────
 clearLog.addEventListener('click', () => {
   logBody.innerHTML = '';
   log('Log limpiado', 'info');
 });
 
-// ─── Enter en el input de URL ─────────────────────────────────
 modelURL.addEventListener('keydown', e => {
   if (e.key === 'Enter') loadBtn.click();
 });
